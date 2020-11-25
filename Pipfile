@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "2.7"
