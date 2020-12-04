@@ -1,0 +1,55 @@
+一、创建快照
+https://www.elastic.co/guide/en/elasticsearch/reference/7.x/snapshots-register-repository.html
+1、添加ES备份存储目录
+mkdir  /data1/snapshot
+chown es.es /data1/snapshot -R
+
+2、修改ES集群配置：elasticsearch.yml
+ # 注册snapshot仓库
+   # Path to snapshot repository:
+	path.repo: ["/data1/snapshot"]
+   
+  grep "snapshot" /data/elasticsearch-7.6.0/config/elasticsearch.yml
+  
+3、关闭分片分配
+  curl  -XPUT  -H 'Content-Type: application/json'  -d "{\"transient\":{\"cluster.routing.allocation.enable\":\"none\"}}"  "http://127.0.0.1:9200/_cluster/settings" 
+  
+  curl  -XPUT  -H 'Content-Type: application/json'  -d "{\"transient\":{\"cluster.routing.allocation.enable\":\"all\"}}"  "http://127.0.0.1:9200/_cluster/settings" 
+  
+4、slb摘除该节点
+5、重启节点
+   kill `pidof java`
+   ./bin/elasticsearch -d
+   
+6、注册snapshot仓库
+PUT /_snapshot/my_fs_backup
+{
+  "type": "fs",
+  "settings": {
+    "location": "/data1/snapshot",
+    "compress": true
+  }
+}
+
+#查询仓库
+GET /_snapshot/*backup*
+
+7、创建快照（snapshot_le3dwp_01为快照名称）
+# 对所有索引创建快照
+PUT /_snapshot/my_fs_backup/snapshot_1?wait_for_completion=true
+
+# 指定索引创建快照
+PUT /_snapshot/my_fs_backup/snapshot_le3dwp_01?wait_for_completion=true
+{
+  "indices": "le3dwp-game-2020.10,le3dwp-online-2020.10",
+  "ignore_unavailable": true,
+  "include_global_state": false,
+  "metadata": {
+    "taken_by": "guoqp",
+    "taken_because": "test snapshot"
+  }
+}
+
+# 查询指定快照
+GET /_snapshot/my_fs_backup/snapshot_le3dwp_01
+
