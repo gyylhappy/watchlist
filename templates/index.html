@@ -3,8 +3,15 @@
     <head>
         <meta charset="utf-9">
         <title>{{ name }}'s Watchlist</title>
+        <link rel="icon" href="{{ url_for('static', filename='logo.jpg') }}">
     </head>
     <body>
+        <p>{{ movies|length }} Titles</p>
+        <form method="post">
+            <input type="text" name="title" autocomplete="off" required>Name </inputtype>
+            <input type="text" name="year" autocomplete="off" required>Year </inputtype>
+            <input class="btn" type="submit" name="submit" value="Add">
+        </form method>
         <h2>{{ name }}'s Watchlist</h2>
         {# 使用 length 过滤器获取 movies 变量的长度 #}
         <p>{{ movies|length }} Titles</p>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<htmllang="en">
+    <head>
+        <metacharset="utf-8">
+        <title>{{ err }}'s Watchlist</title>
+        <linkrel="icon"href="{{ url_for('static', filename='logo.jgp') }}">
+        <!-- <linkrel="stylesheet"href="{{ url_for('static', filename='style.css') }}"type="text/css"> -->
+    </head>
+    <body>
+        <h2>
+            <!-- <imgalt="Avatar"class="avatar"src="{{ url_for('static', filename='images/avatar.png') }}">         -->
+            {{ err }}'s Watchlist
+        </h2>
+        <ulclass="movie-list">
+            <li>            
+                Page Not Found - 404
+                <spanclass="float-right">
+                    <ahref="{{ url_for('index') }}">Go Back</a>
+                </span>
+            </li>
+        </ul>
+        <footer>
+            <small>&copy; 2020 <a href="http://127.0.0.1:5000/hello">HelloFlask</a></small>
+        </footer>
+    </body>
+</html>
