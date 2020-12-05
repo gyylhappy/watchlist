@@ -36,7 +36,7 @@ GET /_snapshot/*backup*
 
 7、创建快照（snapshot_le3dwp_01为快照名称）
 # 对所有索引创建快照
-PUT /_snapshot/my_fs_backup/snapshot_1?wait_for_completion=true
+PUT /_snapshot/my_fs_backup/snapshot_all_20201204?wait_for_completion=true
 
 # 指定索引创建快照
 PUT /_snapshot/my_fs_backup/snapshot_le3dwp_01?wait_for_completion=true
@@ -51,5 +51,38 @@ PUT /_snapshot/my_fs_backup/snapshot_le3dwp_01?wait_for_completion=true
 }
 
 # 查询指定快照
+# 查看正在执行的快照
+GET /_snapshot/my_fs_backup/_current
+
 GET /_snapshot/my_fs_backup/snapshot_le3dwp_01
 
+8、恢复指定索引
+参考：https://www.elastic.co/guide/en/elasticsearch/reference/7.x/snapshots-restore-snapshot.html
+
+POST /_snapshot/my_fs_backup/snapshot_le3dwp_01/_restore
+{
+  "indices": "le3dwp-online-2020.10"
+}
+
+9、停止正在执行的快照
+DELETE /_snapshot/my_backup/snapshot_1
+
+10、脚本
+#!/bin/bash
+ESIP=127.0.0.1
+DATE=`date -d '-2 days' +'%Y.%m.%d'`
+INDEX='{ "indices": "'$DATE'" }'
+echo "begin to backup ES LOG..."
+ 
+curl -XPUT "http://$ESIP:9200/_snapshot/my_backup/snapshot_$DATE?wait_for_completion=true" -d $INDEX
+ 
+echo "----------------------------------------------------------------------------"
+ 
+echo "begin to clean ES LOG..."
+ 
+URL1="http://$ESIP:9200/filebeat-$DATE"
+ 
+curl -XDELETE $URL1
+
+ 
+echo "TRANSFER AND CLEAN ES LOG END!"
